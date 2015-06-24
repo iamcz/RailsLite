@@ -1,25 +1,39 @@
 require 'webrick'
 require 'phase6/router'
-require 'phase8/controller_base'
+require 'phase9/controller_base'
 
 describe Phase9::Router do
   let(:router) { Phase9::Router.new }
   let(:req) { WEBrick::HTTPRequest.new(Logger: nil) }
   let(:res) { WEBrick::HTTPResponse.new(HTTPVersion: '1.0') }
+  let(:ctrlr) { UserController.new(req, res) }
 
   before(:each) do
+    class UserController < Phase9::ControllerBase
+    end
+
+    allow(req).to receive(:host) { "localhost" }
     router.add_route(Regexp.new("^/users$"), :get, UserController, :index)
     router.add_route(Regexp.new("^/users/(?<id>\\d+)$"), :get, UserController, :show)
-
-    class UserController < Phase9::BaseController
-    end
 
     UserController.define_route_helpers(router.routes)
   end
 
-  it "can calculate a path with no params" do
-    expect((UserController.methods - Class.new.methods)).to include(:user_index_path)
-    expect((UserController.methods - Class.new.methods)).to include(:user_show_path)
+  it "defines the route helper methods" do
+    expect((ctrlr.methods - Class.new.methods)).to include(:user_index_path)
+    expect((ctrlr.methods - Class.new.methods)).to include(:user_show_path)
+    expect((ctrlr.methods - Class.new.methods)).to include(:user_index_url)
+    expect((ctrlr.methods - Class.new.methods)).to include(:user_show_url)
+  end
+
+  describe "url helper methods" do
+    it "can calculate the url with no params" do
+      expect(ctrlr.user_index_url).to eq("http://localhost/users")
+    end
+    
+    it "can calculate the url with a params" do
+      expect(ctrlr.user_show_url(id: 1)).to eq("http://localhost/users/1")
+    end
   end
 
   # describe "#add_route" do
