@@ -1,8 +1,8 @@
 require 'active_support/inflector'
 
 module RouteHelper
-  SINGULAR_PATH_METHODS = [:show, :update, :destroy]
-  PLURAL_PATH_METHODS = [:index, :create]
+  SINGULAR_PATH_ACTIONS = [:show, :update, :destroy]
+  PLURAL_PATH_ACTIONS = [:index, :create]
 
   def define_route_helpers(routes)
     routes.each do |route|
@@ -69,34 +69,6 @@ module RouteHelper
         end
       end
 
-    end
-  end
-
-  def path_for(action)
-    class_name = self.to_s.underscore.chomp("_controller")
-
-    if PLURAL_PATH_NAMES.include?(action)
-      "/#{class_name}"
-    elsif SINGULAR_PATH_METHODS.include?(action) || action == :destroy
-      "/#{class_name}/<id>"
-    elsif action == :edit
-      "/#{class_name}/<id>/edit"
-    elsif action == :new
-      "/#{class_name}/<id>/new"
-    end
-  end
-
-  def method_for(action)
-    class_name = self.to_s.underscore.chomp("_controller")
-
-    if PLURAL_PATH_NAMES.include?(action)
-      class_name
-    elsif SINGULAR_PATH_METHODS.include?(action)
-      class_name.singularize
-    elsif action == :edit
-      "edit_#{class_name.singularize}"
-    elsif action == :new
-      "new_#{class_name.singularize}"
     end
   end
 end

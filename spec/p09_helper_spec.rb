@@ -19,7 +19,12 @@ describe Phase9::Router do
     allow(user).to receive(:id) { user_id }
 
     router.add_route(Regexp.new("^/users$"), :get, UserController, :index)
+    router.add_route(Regexp.new("^/users$"), :post, UserController, :create)
+    router.add_route(Regexp.new("^/users/new$"), :get, UserController, :new)
     router.add_route(Regexp.new("^/users/(?<id>\\d+)$"), :get, UserController, :show)
+    router.add_route(Regexp.new("^/users/(?<id>\\d+)$"), :get, UserController, :update)
+    router.add_route(Regexp.new("^/users/(?<id>\\d+)$"), :get, UserController, :destroy)
+    router.add_route(Regexp.new("^/users/(?<id>\\d+)/edit$"), :get, UserController, :edit)
 
     UserController.define_route_helpers(router.routes)
   end
@@ -32,16 +37,21 @@ describe Phase9::Router do
   end
 
   describe "url helper methods" do
+    it "should include all of the helper methods" do
+      expect((ctrlr.methods - Class.new.methods)).to include(:users_url)
+      expect((ctrlr.methods - Class.new.methods)).to include(:user_url)
+    end
+
     it "can calculate the url with no params" do
-      expect(ctrlr.user_index_url).to eq("http://localhost/users")
+      expect(ctrlr.users_url).to eq("http://localhost/users")
     end
     
     it "can calculate the url with params" do
-      expect(ctrlr.user_show_url(id: 5)).to eq("http://localhost/users/5")
+      expect(ctrlr.user_url(id: 5)).to eq("http://localhost/users/5")
     end
     
     it "can calculate the url with an object" do
-      expect(ctrlr.user_show_url(user)).to eq("http://localhost/users/#{user_id}")
+      expect(ctrlr.edit_user_url(user)).to eq("http://localhost/users/#{user_id}/edit")
     end
   end
 
