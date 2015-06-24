@@ -9,5 +9,11 @@ module Phase9
   end
 
   class Router < Phase6::Router
+    def run(req, res)
+      route = match(req)
+      
+      route.controller_class.define_route_helpers(@routes) if route
+      super
+    end
   end
 end
