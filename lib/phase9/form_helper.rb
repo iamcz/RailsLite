@@ -19,14 +19,6 @@ module FormHelper
 
   private
 
-  def path_for(action)
-    class_name = self.class.to_s.to_s.underscore.chomp('_controller')
-    action_name = action.to_s
-    path_method = "#{class_name}_#{action_name}_path".to_sym
-    
-    self.send(path_method)
-  end
-
   def h(str)
     str.gsub("<","&lt;").gsub(">","&gt;")
   end
