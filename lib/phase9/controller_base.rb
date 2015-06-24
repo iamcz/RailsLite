@@ -4,7 +4,10 @@ require_relative 'form_helper'
 
 module Phase9
   class BaseController < Phase8::BaseController
-    include RouteHelper
+    extend RouteHelper
     include FormHelper
+  end
+
+  class Router < Phase6::Router
   end
 end
