@@ -7,12 +7,17 @@ describe Phase9::Router do
   let(:req) { WEBrick::HTTPRequest.new(Logger: nil) }
   let(:res) { WEBrick::HTTPResponse.new(HTTPVersion: '1.0') }
   let(:ctrlr) { UserController.new(req, res) }
+  let(:user) { double("user") }
+  let(:user_id) { 7 }
 
   before(:each) do
     class UserController < Phase9::ControllerBase
     end
 
+    # Allowances
     allow(req).to receive(:host) { "localhost" }
+    allow(user).to receive(:id) { user_id }
+
     router.add_route(Regexp.new("^/users$"), :get, UserController, :index)
     router.add_route(Regexp.new("^/users/(?<id>\\d+)$"), :get, UserController, :show)
 
@@ -33,6 +38,10 @@ describe Phase9::Router do
     
     it "can calculate the url with a params" do
       expect(ctrlr.user_show_url(id: 1)).to eq("http://localhost/users/1")
+    end
+    
+    it "can calculate the url with an object" do
+      expect(ctrlr.user_show_url(user)).to eq("http://localhost/users/#{user_id}")
     end
   end
 

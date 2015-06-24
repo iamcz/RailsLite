@@ -27,7 +27,7 @@ module RouteHelper
           obj = args
           route.pattern.names.each do |name|
             value = obj.send(name.to_sym)
-            path_str.gsub!("(<#{name}>)", value)
+            path_str.gsub!("(<#{name}>)", value.to_s)
           end
         end
 
