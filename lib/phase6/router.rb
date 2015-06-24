@@ -45,6 +45,7 @@ module Phase6
     # evaluate the proc in the context of the instance
     # for syntactic sugar :)
     def draw(&proc)
+      instance_eval(&proc)
     end
 
     # make each of these methods that
