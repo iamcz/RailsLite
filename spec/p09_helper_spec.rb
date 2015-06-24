@@ -36,8 +36,8 @@ describe Phase9::Router do
       expect(ctrlr.user_index_url).to eq("http://localhost/users")
     end
     
-    it "can calculate the url with a params" do
-      expect(ctrlr.user_show_url(id: 1)).to eq("http://localhost/users/1")
+    it "can calculate the url with params" do
+      expect(ctrlr.user_show_url(id: 5)).to eq("http://localhost/users/5")
     end
     
     it "can calculate the url with an object" do
@@ -45,57 +45,17 @@ describe Phase9::Router do
     end
   end
 
-  # describe "#add_route" do
-  #   it "adds a route" do
-  #     subject.add_route(1, 2, 3, 4)
-  #     expect(subject.routes.count).to eq(1)
-  #     subject.add_route(1, 2, 3, 4)
-  #     subject.add_route(1, 2, 3, 4)
-  #     expect(subject.routes.count).to eq(3)
-  #   end
-  # end
-
-  # describe "#match" do
-  #   it "matches a correct route" do
-  #     subject.add_route(Regexp.new("^/users$"), :get, :x, :x)
-  #     allow(req).to receive(:path) { "/users" }
-  #     allow(req).to receive(:request_method) { :get }
-  #     matched = subject.match(req)
-  #     expect(matched).not_to be_nil
-  #   end
-
-  #   it "doesn't match an incorrect route" do
-  #     subject.add_route(Regexp.new("^/users$"), :get, :x, :x)
-  #     allow(req).to receive(:path) { "/incorrect_path" }
-  #     allow(req).to receive(:request_method) { :get }
-  #     matched = subject.match(req)
-  #     expect(matched).to be_nil
-  #   end
-  # end
-
-  # describe "#run" do
-  #   it "sets status to 404 if no route is found" do
-  #     subject.add_route(Regexp.new("^/users$"), :get, :x, :x)
-  #     allow(req).to receive(:path).and_return("/incorrect_path")
-  #     allow(req).to receive(:request_method).and_return("GET")
-  #     subject.run(req, res)
-  #     expect(res.status).to eq(404)
-  #   end
-  # end
-
-  # describe "http method (get, put, post, delete)" do
-  #   it "adds methods get, put, post and delete" do
-  #     router = Phase6::Router.new
-  #     expect((router.methods - Class.new.methods)).to include(:get)
-  #     expect((router.methods - Class.new.methods)).to include(:put)
-  #     expect((router.methods - Class.new.methods)).to include(:post)
-  #     expect((router.methods - Class.new.methods)).to include(:delete)
-  #   end
-
-  #   it "adds a route when an http method method is called" do
-  #     router = Phase6::Router.new
-  #     router.get Regexp.new("^/users$"), Phase6::ControllerBase, :index
-  #     expect(router.routes.count).to eq(1)
-  #   end
-  # end
+  describe "path helper methods" do
+    it "can calculate the path with no params" do
+      expect(ctrlr.user_index_path).to eq("/users")
+    end
+    
+    it "can calculate the path with params" do
+      expect(ctrlr.user_show_path(id: 5)).to eq("/users/5")
+    end
+    
+    it "can calculate the path with an object" do
+      expect(ctrlr.user_show_path(user)).to eq("/users/#{user_id}")
+    end
+  end
 end
