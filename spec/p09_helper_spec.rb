@@ -73,3 +73,26 @@ describe Phase9::Router do
     end
   end
 end
+
+describe Phase9::ControllerBase do
+  let(:req) { WEBrick::HTTPRequest.new(Logger: nil) }
+  let(:res) { WEBrick::HTTPResponse.new(HTTPVersion: '1.0') }
+  let(:ctrlr) { UsersController.new(req, res) }
+  let(:user) { double("user") }
+
+  before(:each) do
+    class UsersController < Phase9::ControllerBase
+    end
+
+    # Allowances
+    allow(req).to receive(:host) { "localhost" }
+    allow(user).to receive(:id) { user_id }
+  end
+
+  describe "#button_to" do
+    it "works" do
+      button_html = button_to("New", action: "new")
+      expect(button_html).to contain("value=\"New\"")
+    end
+  end
+end
