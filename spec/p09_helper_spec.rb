@@ -90,9 +90,9 @@ describe Phase9::ControllerBase do
   end
 
   describe "#button_to" do
-    it "works" do
-      button_html = button_to("New", action: "new")
-      expect(button_html).to contain("value=\"New\"")
+    it "works with options hash" do
+      button_html = ctrlr.button_to("New", action: "new")
+      expect(button_html).to include("value=\"New\"")
     end
   end
 end

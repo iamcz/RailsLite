@@ -13,17 +13,39 @@ module FormHelper
     HTML
   end
 
-  def button_to(text, action, method = :get, path_params = {})
+  def button_to(name = nil, options = nil, html_options = nil)
     # In Rails:
     # button_to text, {controller: :c, action: :a}, method: :m
-    raise FormError unless (PUBLIC_METHODS + HIDDEN_METHODS).include?(method)
     
-    form_method = ( method == :get ) ? :get : :post
+    value_attr = name.is_a?(String) ? " value=\"#{name}\"" : ""
+    if name.is_a?(Array)
+      action = name.first
+      controller = name.last.class.controller
+      action_papth = controller.path_for(action)
+    end
+
+    if options.is_a?(Hash)
+      action = options[:action].to_sym
+      controller = ( options[:controller] || self.class ).to_s.constantize
+      action_path = controller.path_for(action)
+    elsif options.is_a?(String)
+      action_path = options
+    end
+    
+    if html_options.is_a?(Hash)
+      method = html_options[:method] 
+    end
+    
+    method ||= :post
+
+    raise FormError unless (PUBLIC_METHODS + HIDDEN_METHODS).include?(method)
+    form_method = (method == :get) ? "get" : "post"
 
     <<-HTML
-      <form class="button_to" action="#{path_for(action, path_params)}" method="#{form_method}">
+      <form class="button_to" action="#{action_path}" method="#{form_method}">
         #{hidden_method_for(method)}
-        <button type="submit" value="#{text}">
+        <button type="submit"#{value_attr}>
+        </button>
       </form>
     HTML
   end
