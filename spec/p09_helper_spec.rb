@@ -79,9 +79,13 @@ describe Phase9::ControllerBase do
   let(:res) { WEBrick::HTTPResponse.new(HTTPVersion: '1.0') }
   let(:ctrlr) { UsersController.new(req, res) }
   let(:user) { double("user") }
+  let(:user_id) { 7 }
 
   before(:each) do
     class UsersController < Phase9::ControllerBase
+    end
+
+    class PostsController < Phase9::ControllerBase
     end
 
     # Allowances
@@ -90,9 +94,19 @@ describe Phase9::ControllerBase do
   end
 
   describe "#button_to" do
-    it "works with options hash" do
-      button_html = ctrlr.button_to("New", action: "new")
-      expect(button_html).to include("value=\"New\"")
+    context "options hash is given" do
+      it "works with action" do
+        button_html = ctrlr.button_to("New", action: "new")
+        expect(button_html).to include("value=\"New\"")
+        expect(button_html).to include("action=\"/users/new\"")
+      end
+
+      it "works with action and controller" do
+        button_html = ctrlr.button_to("New Post", action: :new, controller: :posts)
+        expect(button_html).to include("action=\"/posts/new\"")
+      end
     end
+
+
   end
 end

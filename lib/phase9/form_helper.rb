@@ -1,3 +1,5 @@
+require 'active_support/inflector'
+
 module FormHelper
   PUBLIC_METHODS = [:get, :post]
   HIDDEN_METHODS = [:put, :patch, :delete]
@@ -26,6 +28,7 @@ module FormHelper
 
     if options.is_a?(Hash)
       action = options[:action].to_sym
+      debugger
       controller = ( options[:controller] || self.class ).to_s.constantize
       action_path = controller.path_for(action)
     elsif options.is_a?(String)

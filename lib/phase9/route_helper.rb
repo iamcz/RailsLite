@@ -1,11 +1,11 @@
 require 'active_support/inflector'
 
-module RouteHelper
+module RouterHelper
   SINGULAR_PATH_ACTIONS = [:show, :update, :destroy]
   PLURAL_PATH_ACTIONS = [:index, :create]
 
-  def method_for(action)
-    class_name = self.to_s.underscore.chomp("_controller")
+  def partial_name_for(controller_class, action)
+    class_name = controller_class.to_s.underscore.chomp("_controller")
 
     if PLURAL_PATH_ACTIONS.include?(action)
       class_name
@@ -18,8 +18,8 @@ module RouteHelper
     end
   end
 
-  def path_for(action)
-    class_name = self.to_s.underscore.chomp("_controller")
+  def path_for(controller_class, action)
+    class_name = controller_class.to_s.underscore.chomp("_controller")
 
     if PLURAL_PATH_ACTIONS.include?(action)
       "/#{class_name}"
@@ -32,10 +32,16 @@ module RouteHelper
     end
   end
 
-  def define_route_helpers(routes)
-    routes.each do |route|
+  def define_helpers
+    class << self
+      attr_reader :helper_methods
+    end
+
+    @routes.each do |route|
       action = route.action_name
-      method_partial = method_for(action)
+      controller = route.controller_class
+
+      method_partial = partial_name_for(controller, action)
       path_method = "#{method_partial}_path".to_sym
       url_method = "#{method_partial}_url".to_sym
 
@@ -53,12 +59,16 @@ module RouteHelper
 
           path
         end
+
+        @helper_methods << path_method
       end
       
       unless method_defined?(url_method)
         define_method(url_method) do |args = nil|
           "http://" + @req.host + self.send(path_method, args)
         end
+
+        @helper_methods << url_method
       end
     end
   end
