@@ -1,5 +1,6 @@
 require_relative '../phase8/controller_base'
 require_relative '../phase6/router'
+require_relative 'controller_helper'
 require_relative 'router_helper'
 require_relative 'route_helper'
 require_relative 'form_helper'
