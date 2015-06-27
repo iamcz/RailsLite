@@ -1,12 +1,12 @@
 require 'webrick'
-require 'phase6/router'
+require 'phase9/router'
 require 'phase9/controller_base'
 
 describe Phase9::Router do
   let(:router) { Phase9::Router.new }
   let(:req) { WEBrick::HTTPRequest.new(Logger: nil) }
   let(:res) { WEBrick::HTTPResponse.new(HTTPVersion: '1.0') }
-  let(:ctrlr) { UsersController.new(req, res) }
+  let(:ctrlr) { UsersController.new(req, res, router) }
   let(:user) { double("user") }
   let(:user_id) { 7 }
 
@@ -25,8 +25,6 @@ describe Phase9::Router do
     router.add_route(Regexp.new("^/users/(?<id>\\d+)$"), :get, UsersController, :update)
     router.add_route(Regexp.new("^/users/(?<id>\\d+)$"), :get, UsersController, :destroy)
     router.add_route(Regexp.new("^/users/(?<id>\\d+)/edit$"), :get, UsersController, :edit)
-
-    UsersController.define_route_helpers(router.routes)
   end
 
   describe "path helper methods" do
@@ -75,9 +73,10 @@ describe Phase9::Router do
 end
 
 describe Phase9::ControllerBase do
+  let(:router) { Phase9::Router.new }
   let(:req) { WEBrick::HTTPRequest.new(Logger: nil) }
   let(:res) { WEBrick::HTTPResponse.new(HTTPVersion: '1.0') }
-  let(:ctrlr) { UsersController.new(req, res) }
+  let(:ctrlr) { UsersController.new(req, res, router) }
   let(:user) { double("user") }
   let(:user_id) { 7 }
 
@@ -91,6 +90,24 @@ describe Phase9::ControllerBase do
     # Allowances
     allow(req).to receive(:host) { "localhost" }
     allow(user).to receive(:id) { user_id }
+
+    router.add_route(Regexp.new("^/users$"), :get, UsersController, :index)
+    router.add_route(Regexp.new("^/users$"), :post, UsersController, :create)
+    router.add_route(Regexp.new("^/users/new$"), :get, UsersController, :new)
+    router.add_route(Regexp.new("^/users/(?<id>\\d+)$"), :get, UsersController, :show)
+    router.add_route(Regexp.new("^/users/(?<id>\\d+)$"), :put, UsersController, :update)
+    router.add_route(Regexp.new("^/users/(?<id>\\d+)$"), :patch, UsersController, :update)
+    router.add_route(Regexp.new("^/users/(?<id>\\d+)$"), :delete, UsersController, :destroy)
+    router.add_route(Regexp.new("^/users/(?<id>\\d+)/edit$"), :get, UsersController, :edit)
+    
+    router.add_route(Regexp.new("^/posts$"), :get, PostsController, :index)
+    router.add_route(Regexp.new("^/posts$"), :post, PostsController, :create)
+    router.add_route(Regexp.new("^/posts/new$"), :get, PostsController, :new)
+    router.add_route(Regexp.new("^/posts/(?<id>\\d+)$"), :get, PostsController, :show)
+    router.add_route(Regexp.new("^/posts/(?<id>\\d+)$"), :put, PostsController, :update)
+    router.add_route(Regexp.new("^/posts/(?<id>\\d+)$"), :patch, PostsController, :update)
+    router.add_route(Regexp.new("^/posts/(?<id>\\d+)$"), :delete, PostsController, :destroy)
+    router.add_route(Regexp.new("^/posts/(?<id>\\d+)/edit$"), :get, PostsController, :edit)
   end
 
   describe "#button_to" do
@@ -102,7 +119,7 @@ describe Phase9::ControllerBase do
       end
 
       it "works with action and controller" do
-        button_html = ctrlr.button_to("New Post", action: :new, controller: :posts)
+        button_html = ctrlr.button_to("New Post", action: :new, controller: :PostsController)
         expect(button_html).to include("action=\"/posts/new\"")
       end
     end
