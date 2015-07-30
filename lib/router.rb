@@ -52,12 +52,12 @@ class Router
 
     unless self.singleton_methods.include?(path_method)
       define_path_helper(controller, action)
-      @helpers << path_method
+      # @helpers << path_method
     end
     
     unless self.singleton_methods.include?(url_method)
       define_url_helper(controller, action)
-      @helpers << url_method
+      # @helpers << url_method
     end
   end
 
