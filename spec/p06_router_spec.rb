@@ -47,7 +47,7 @@ describe Route do
       dummy_controller_class = DummyController
       dummy_controller_instance = DummyController.new
       allow(dummy_controller_instance).to receive(:invoke_action)
-      allow(dummy_controller_class).to receive(:new).with(req, res, {}, router) do
+      allow(dummy_controller_class).to receive(:new).with(req, res, {}) do
         dummy_controller_instance
       end
       expect(dummy_controller_instance).to receive(:invoke_action)

@@ -22,7 +22,7 @@ class Route
     end
     
     @controller_class
-      .new(req, res, route_params, @router)
+      .new(req, res, route_params)
       .invoke_action(@action_name)
   end
 end
