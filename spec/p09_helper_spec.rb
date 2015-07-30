@@ -1,17 +1,17 @@
 require 'webrick'
-require 'phase9/router'
-require 'phase9/controller_base'
+require_relative '../lib/router'
+require_relative '../lib/controller'
 
-describe Phase9::Router do
-  let(:router) { Phase9::Router.new }
+describe Router do
+  let(:router) { Router.new }
   let(:req) { WEBrick::HTTPRequest.new(Logger: nil) }
   let(:res) { WEBrick::HTTPResponse.new(HTTPVersion: '1.0') }
-  let(:ctrlr) { UsersController.new(req, res, router) }
+  let(:ctrlr) { UsersController.new(req, res, {}, router) }
   let(:user) { double("user") }
   let(:user_id) { 7 }
 
   before(:each) do
-    class UsersController < Phase9::ControllerBase
+    class UsersController < ControllerBase
     end
 
     # Allowances
@@ -72,19 +72,19 @@ describe Phase9::Router do
   end
 end
 
-describe Phase9::ControllerBase do
-  let(:router) { Phase9::Router.new }
+describe ControllerBase do
+  let(:router) { Router.new }
   let(:req) { WEBrick::HTTPRequest.new(Logger: nil) }
   let(:res) { WEBrick::HTTPResponse.new(HTTPVersion: '1.0') }
-  let(:ctrlr) { UsersController.new(req, res, router) }
+  let(:ctrlr) { UsersController.new(req, res, {}, router) }
   let(:user) { double("user") }
   let(:user_id) { 7 }
 
   before(:each) do
-    class UsersController < Phase9::ControllerBase
+    class UsersController < ControllerBase
     end
 
-    class PostsController < Phase9::ControllerBase
+    class PostsController < ControllerBase
     end
 
     # Allowances
@@ -123,7 +123,5 @@ describe Phase9::ControllerBase do
         expect(button_html).to include("action=\"/posts/new\"")
       end
     end
-
-
   end
 end

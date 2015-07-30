@@ -1,10 +1,9 @@
 require 'webrick'
-require 'byebug'
-require 'phase8/controller_base'
+require_relative '../lib/controller'
 
-describe "the symphony of things" do
+describe "flash feature" do
   before(:all) do
-    class FlashCatsController < Phase8::ControllerBase
+    class FlashCatsController < ControllerBase
       def now_index
         flash.now[:cat_flash] = "THIS IS THE CAT FLASH"
         @cats = ["GIZMO"]

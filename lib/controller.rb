@@ -5,14 +5,20 @@ require 'erb'
 require_relative 'session'
 require_relative 'params'
 require_relative 'flash'
+require_relative 'form_helper'
 
 class ControllerBase
+  include FormHelper
+
   attr_reader :req, :res, :params
 
   def initialize(req, res, route_params = {})
     @req, @res = req, res
     @already_built_response = false
     @params = Params.new(req, route_params)
+    # @router = router
+    # 
+    # define_router_helpers
   end
   
   def already_built_response?
@@ -60,5 +66,16 @@ class ControllerBase
   
   def flash
     @flash ||= Flash.new(req)
+  end
+
+  private
+
+  def define_router_helpers
+    @router.helpers.each do |helper|
+      # we are defining the helpers on JUST THIS instance of the controller
+      self.define_singleton_method(helper) do |arg=nil|
+        @router.send(helper, arg)
+      end
+    end
   end
 end
