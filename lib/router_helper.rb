@@ -1,7 +1,9 @@
-SINGULAR_PATH_ACTIONS = [:show, :update, :destroy]
-PLURAL_PATH_ACTIONS = [:index, :create]
+require 'active_support/inflector'
 
 module RouterHelper
+  SINGULAR_PATH_ACTIONS = [:show, :update, :destroy]
+  PLURAL_PATH_ACTIONS = [:index, :create]
+
   def partial_name_for(controller, action)
     class_name = controller.to_s.underscore.chomp('_controller')
 

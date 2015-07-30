@@ -1,3 +1,5 @@
+require 'uri'
+
 class Params
   def initialize(req, route_params = {})
     @params = route_params
@@ -9,7 +11,6 @@ class Params
     @params[key.to_s]
   end
 
-  # this will be useful if we want to `puts params` in the server log
   def to_s
     @params.to_s
   end
@@ -39,8 +40,6 @@ class Params
     params_hash
   end
 
-  # this should return an array
-  # user[address][street] should return ['user', 'address', 'street']
   def parse_key(key)
     key.split(/\]\[|\[|\]/)
   end

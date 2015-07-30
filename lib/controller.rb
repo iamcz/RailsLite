@@ -1,3 +1,7 @@
+require_relative 'session'
+require_relative 'params'
+require_relative 'flash'
+
 class ControllerBase
   attr_reader :req, :res, :params
 

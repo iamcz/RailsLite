@@ -1,7 +1,12 @@
-HOST = 'localhost' # should really get this from http server
+require_relative 'route'
+require_relative 'router_helper'
 
 class Router
-  attr_reader :routes
+  HOST = 'localhost' # should really get this from http server
+
+  extend RouterHelper
+
+  attr_reader :routes, :helpers
 
   def initialize
     @routes = []
