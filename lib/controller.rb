@@ -16,9 +16,6 @@ class ControllerBase
     @req, @res = req, res
     @already_built_response = false
     @params = Params.new(req, route_params)
-    # @router = router
-    # 
-    # define_router_helpers
   end
   
   def already_built_response?
